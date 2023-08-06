@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Import\ImportExcelController;
+use App\Http\Controllers\Row\RowController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/import', [ImportExcelController::class, 'import'])
+//    ->middleware('basic.auth')
+;
+Route::resource('rows', RowController::class)->only('index');
