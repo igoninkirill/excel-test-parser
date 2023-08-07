@@ -13,6 +13,6 @@ class ImportExcelController extends Controller
 
     public function import(ImportExcelStoreRequest $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json($this->service->import($request->validated()));
+        return $this->service->import($request->validated());
     }
 }

@@ -2,14 +2,39 @@
 
 namespace App\Services\Import;
 
+use App\Jobs\Parsing\ParseExcelJob;
+use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+
 class ImportExcelService
 {
-    public function import(array $data): bool
+    public function import(array $data): \Illuminate\Http\JsonResponse
     {
-        $this->parseExcel();
-        return true;
+        $path = $data['file']->store('excel_files');
+        ParseExcelJob::dispatch($path);
+        return response()->json(['message' => 'File uploaded and parsing started.'], 200);
     }
 
-    protected function parseExcel(): void
-    {}
+    public function parse(string $filePath): \Generator
+    {
+        $reader = new Xlsx();
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load(storage_path('app/' . $filePath));
+        $worksheet = $spreadsheet->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow('A');
+        for ($row = 2; $row <= $highestRow; $row += 1000) {
+            $chunk = [];
+            for ($chunkRow = $row; $chunkRow < $row + 1000 && $chunkRow <= $highestRow; $chunkRow++) {
+                $name = $worksheet->getCell('B' . $chunkRow)->getValue();
+                $date = $worksheet->getCell('C' . $chunkRow)->getValue();
+                if ($name && $date) {
+                    $chunk[] = [
+                        'name' => $name,
+                        'date' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date),
+                    ];
+                }
+            }
+            yield $chunk;
+        }
+    }
 }

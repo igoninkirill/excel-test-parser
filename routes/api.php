@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Import\ImportExcelController;
+use App\Http\Controllers\Row\RowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/import', [ImportExcelController::class, 'import'])
+//    ->middleware('basic.auth')
+;
+Route::resource('rows', RowController::class)->only('index');

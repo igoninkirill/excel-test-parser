@@ -22,7 +22,7 @@ class ImportExcelStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|mimes:xlsx,xls'
+            'file' => 'required|mimes:xlsx,xls|max:102400'
         ];
     }
 }

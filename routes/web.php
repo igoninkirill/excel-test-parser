@@ -18,8 +18,3 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::post('/import', [ImportExcelController::class, 'import'])
-//    ->middleware('basic.auth')
-;
-Route::resource('rows', RowController::class)->only('index');
