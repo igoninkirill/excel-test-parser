@@ -16,7 +16,5 @@ use App\Http\Controllers\Row\RowController;
 |
 */
 
-Route::post('/import', [ImportExcelController::class, 'import'])
-//    ->middleware('basic.auth')
-;
+Route::post('/import', [ImportExcelController::class, 'import'])->middleware('basic.auth');
 Route::resource('rows', RowController::class)->only('index');
