@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
     libhiredis-dev \
     libonig-dev \
     libpng-dev \
-    postgresql-client
+    postgresql-client \
+    supervisor
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd
@@ -36,3 +37,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 ./bootstrap/cache
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY ./docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

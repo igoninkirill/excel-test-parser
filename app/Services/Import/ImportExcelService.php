@@ -3,8 +3,8 @@
 namespace App\Services\Import;
 
 use App\Jobs\Parsing\ParseExcelJob;
-use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class ImportExcelService
 {
@@ -30,7 +30,7 @@ class ImportExcelService
                 if ($name && $date) {
                     $chunk[] = [
                         'name' => $name,
-                        'date' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date),
+                        'date' => ExcelDate::excelToDateTimeObject($date),
                     ];
                 }
             }
